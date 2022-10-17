@@ -1,4 +1,4 @@
-package org.openapitools.api;
+package org.tinder.api;
 
 import org.springframework.web.context.request.NativeWebRequest;
 

@@ -1,4 +1,4 @@
-package org.openapitools;
+package org.tinder;
 
 import com.fasterxml.jackson.databind.Module;
 import org.openapitools.jackson.nullable.JsonNullableModule;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.openapitools", "org.openapitools.api" , "org.openapitools.configuration"})
+@ComponentScan(basePackages = {"org.tinder", "org.tinder.api" , "org.tinder.configuration"})
 public class OpenApiGeneratorApplication {
 
     public static void main(String[] args) {
