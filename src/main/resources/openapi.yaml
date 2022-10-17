@@ -1,0 +1,571 @@
+openapi: 3.0.0
+info:
+  description: Some Description.
+  title: OpenAPI Tinder Like App
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+- url: http://tinder.org/v2
+tags:
+- description: Everything about your user and profiles and match and stuff
+  name: user
+- description: Auth user
+  name: auth
+- description: Everything about matches
+  name: match
+paths:
+  /user:
+    get:
+      description: ""
+      operationId: getAllUsers
+      parameters:
+      - deprecated: true
+        description: Gender to filter by
+        explode: false
+        in: query
+        name: gender
+        required: false
+        schema:
+          items:
+            default: male
+            enum:
+            - male
+            - female
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: age_range_start
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: age_range_end
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: tags
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/User'
+                type: array
+          description: successful operation
+      summary: "Get all users, also filter"
+      tags:
+      - user
+      x-accepts: application/json
+      x-tags:
+      - tag: user
+    post:
+      description: ""
+      operationId: addUser
+      requestBody:
+        $ref: '#/components/requestBodies/User'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: successful operation
+        "405":
+          description: Invalid input
+      summary: Add a new user
+      tags:
+      - user
+      x-content-type: application/json
+      x-accepts: application/json
+      x-tags:
+      - tag: user
+  /user/login:
+    post:
+      description: ""
+      operationId: loginUser
+      parameters:
+      - description: login
+        explode: true
+        in: query
+        name: login
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: password
+        explode: true
+        in: query
+        name: password
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          description: successful operation
+        "405":
+          description: Validation exception
+      summary: login user
+      tags:
+      - auth
+      x-accepts: application/json
+      x-tags:
+      - tag: auth
+  /user/logout:
+    get:
+      description: ""
+      operationId: logoutUser
+      responses:
+        "200":
+          description: successful operation
+        "405":
+          description: Validation exception
+      summary: logout user
+      tags:
+      - auth
+      x-accepts: application/json
+      x-tags:
+      - tag: auth
+  /user/userId:
+    delete:
+      description: ""
+      operationId: deleteUser
+      parameters:
+      - description: ID of user to delete
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          description: successful operation
+        "404":
+          description: User not found
+        "403":
+          description: Not authorized
+      summary: Delete an existing user
+      tags:
+      - user
+      x-accepts: application/json
+      x-tags:
+      - tag: user
+    get:
+      description: ""
+      operationId: getUser
+      parameters:
+      - description: ID of user to get
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: successful operation
+        "404":
+          description: User not found
+        "403":
+          description: Not authorized
+      summary: Get an existing user
+      tags:
+      - user
+      x-accepts: application/json
+      x-tags:
+      - tag: user
+    put:
+      description: ""
+      operationId: updateUser
+      parameters:
+      - description: ID of user to update
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/User'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: successful operation
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: User not found
+        "405":
+          description: Validation exception
+      summary: Update an existing user
+      tags:
+      - user
+      x-content-type: application/json
+      x-accepts: application/json
+      x-tags:
+      - tag: user
+  /user/userId/like:
+    post:
+      description: ""
+      operationId: postLike
+      parameters:
+      - description: ID of user to update
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: ID of user to like
+        explode: true
+        in: query
+        name: liked_user_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: Status of like or dislike of user to like
+        explode: true
+        in: query
+        name: like_status
+        required: true
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: successful operation
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: User not found
+        "405":
+          description: Validation exception
+      summary: Post a like on existing user
+      tags:
+      - user
+      x-accepts: application/json
+      x-tags:
+      - tag: user
+  /user/userId/match:
+    get:
+      description: ""
+      operationId: getMatchesForUser
+      parameters:
+      - description: ID of user
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Match'
+                type: array
+          description: successful operation
+      summary: get all matches for a user
+      tags:
+      - match
+      x-accepts: application/json
+      x-tags:
+      - tag: match
+  /user/userId/match/matchId:
+    delete:
+      description: ""
+      operationId: unmatchUser
+      parameters:
+      - description: ID of user
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: ID of match
+        explode: false
+        in: path
+        name: matchId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+          description: successful operation
+      summary: unmatch user
+      tags:
+      - match
+      x-accepts: application/json
+      x-tags:
+      - tag: match
+    get:
+      description: ""
+      operationId: getMatchForUser
+      parameters:
+      - description: ID of user
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: ID of match
+        explode: false
+        in: path
+        name: matchId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+          description: successful operation
+      summary: get specified match
+      tags:
+      - match
+      x-accepts: application/json
+      x-tags:
+      - tag: match
+  /user/userId/match/matchId/message:
+    post:
+      description: ""
+      operationId: postMessage
+      parameters:
+      - description: ID of user
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: ID of match
+        explode: false
+        in: path
+        name: matchId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/Message'
+      responses:
+        "200":
+          description: successful operation
+      summary: post a message
+      tags:
+      - message
+      x-content-type: application/json
+      x-accepts: application/json
+      x-tags:
+      - tag: message
+  /user/userId/match/matchId/message/messageId:
+    delete:
+      description: ""
+      operationId: deleteMessage
+      parameters:
+      - description: ID of user
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: ID of match
+        explode: false
+        in: path
+        name: matchId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: ID of message
+        explode: false
+        in: path
+        name: messageId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/Message'
+      responses:
+        "200":
+          description: successful operation
+      summary: delete message
+      tags:
+      - message
+      x-content-type: application/json
+      x-accepts: application/json
+      x-tags:
+      - tag: message
+components:
+  requestBodies:
+    User:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+      description: User
+      required: true
+    Match:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Match'
+      description: Match
+      required: true
+    Message:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+      description: Message
+      required: true
+  schemas:
+    User:
+      description: User
+      example:
+        password: password
+        preffered_age_start: 6
+        photo:
+        - photo
+        - photo
+        location: location
+        id: 0
+        login: fedos3d
+        preffered_gender: male
+        preffered_age_end: 1
+        email: memokek@kek.ru
+        tags:
+        - tags
+        - tags
+      properties:
+        id:
+          format: int64
+          type: integer
+        email:
+          example: memokek@kek.ru
+          type: string
+        login:
+          example: fedos3d
+          type: string
+        password:
+          description: Password
+          type: string
+        preffered_gender:
+          deprecated: true
+          enum:
+          - male
+          - female
+          - both
+          type: string
+        preffered_age_start:
+          format: int64
+          type: integer
+        preffered_age_end:
+          format: int64
+          type: integer
+        tags:
+          items:
+            type: string
+          type: array
+        location:
+          type: string
+        photo:
+          items:
+            type: string
+          type: array
+      required:
+      - login
+      - password
+      title: A User
+      type: object
+    Match:
+      title: Match
+    Message:
+      example:
+        toId: 6
+        viewed: true
+        text: text
+        fromId: 0
+        timestamp: 1
+      properties:
+        fromId:
+          format: int64
+          type: integer
+        toId:
+          format: int64
+          type: integer
+        timestamp:
+          format: int64
+          type: integer
+        text:
+          type: string
+        viewed:
+          type: boolean
+      title: Message
