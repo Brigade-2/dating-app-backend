@@ -142,7 +142,7 @@ paths:
       x-accepts: application/json
       x-tags:
       - tag: auth
-  /user/userId:
+  /user/{userId}:
     delete:
       description: ""
       operationId: deleteUser
@@ -234,7 +234,7 @@ paths:
       x-accepts: application/json
       x-tags:
       - tag: user
-  /user/userId/like:
+  /user/{userId}/like:
     post:
       description: ""
       operationId: postLike
@@ -284,7 +284,7 @@ paths:
       x-accepts: application/json
       x-tags:
       - tag: user
-  /user/userId/match:
+  /user/{userId}/match:
     get:
       description: ""
       operationId: getMatchesForUser
@@ -313,7 +313,7 @@ paths:
       x-accepts: application/json
       x-tags:
       - tag: match
-  /user/userId/match/matchId:
+  /user/{userId}/match/{matchId}:
     delete:
       description: ""
       operationId: unmatchUser
@@ -384,7 +384,7 @@ paths:
       x-accepts: application/json
       x-tags:
       - tag: match
-  /user/userId/match/matchId/message:
+  /user/{userId}/match/{matchId}/message:
     post:
       description: ""
       operationId: postMessage
@@ -419,7 +419,7 @@ paths:
       x-accepts: application/json
       x-tags:
       - tag: message
-  /user/userId/match/matchId/message/messageId:
+  /user/{userId}/match/{matchId}/message/{messageId}:
     delete:
       description: ""
       operationId: deleteMessage
