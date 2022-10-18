@@ -31,14 +31,12 @@ jobs:
         script: |
           echo running on branch: ${{ github.head_ref }}
           echo name of Pull Request: ${{ github.event.pull_request.title }}
-          pr_name=${{ github.event.pull_request.title }}
-          pr_name="${pr_name// /_}"
-          echo ${pr_name}
+
 
           rm -rf dating-app-backend 
-          docker stop dating-app &> /dev/null || true
-          docker rm dating-app &> /dev/null || true
-          docker image rm dating-app &> /dev/null || true
+          docker stop ${{ github.head_ref }} &> /dev/null || true
+          docker rm ${{ github.head_ref }} &> /dev/null || true
+          docker image rm ${{ github.head_ref }} &> /dev/null || true
 
           git clone https://github.com/Brigade-2/dating-app-backend.git -b ${{ github.head_ref }} 
           cd dating-app-backend
