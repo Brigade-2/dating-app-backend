@@ -29,6 +29,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
+          rm -rf dating-app-backend
           git clone https://github.com/Brigade-2/dating-app-backend.git
           cd dating-app-backend
           git checkout add_ci
