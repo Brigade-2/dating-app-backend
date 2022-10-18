@@ -29,13 +29,14 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
+          echo ${{ steps.extract_branch.outputs.branch }}
           echo ${{ github.event.pull_request.title }}
           rm -rf dating-app-backend 
           docker stop dating-app &> /dev/null || true
           docker rm dating-app &> /dev/null || true
           docker image rm dating-app &> /dev/null || true
 
-          git clone https://github.com/Brigade-2/dating-app-backend.git -b ${{ github.event.pull_request.title }}
+          git clone https://github.com/Brigade-2/dating-app-backend.git -b ${{ steps.extract_branch.outputs.branch }}
           cd dating-app-backend
 
           docker build . -t dating-app
