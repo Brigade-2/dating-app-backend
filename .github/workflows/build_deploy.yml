@@ -33,7 +33,7 @@ jobs:
           echo name of Pull Request: ${{ github.event.pull_request.title }}
           pr_name=${{ github.event.pull_request.title }}
           pr_name="${pr_name// /_}"
-
+          echo pr_name
 
           rm -rf dating-app-backend 
           docker stop dating-app &> /dev/null || true
