@@ -34,15 +34,15 @@ jobs:
 
 
           rm -rf dating-app-backend 
-          docker stop ${{ github.head_ref }} &> /dev/null || true
-          docker rm ${{ github.head_ref }} &> /dev/null || true
-          docker image rm ${{ github.head_ref }} &> /dev/null || true
+          docker stop ${{ github.event.repository.name }}-${{ github.head_ref }} &> /dev/null || true
+          docker rm ${{ github.event.repository.name }}-${{ github.head_ref }} &> /dev/null || true
+          docker image rm ${{ github.event.repository.name }}-${{ github.head_ref }} &> /dev/null || true
 
-          git clone https://github.com/Brigade-2/dating-app-backend.git -b ${{ github.head_ref }} 
-          cd dating-app-backend
+          git clone https://github.com/Brigade-2/${{ github.event.repository.name }}.git -b ${{ github.head_ref }} 
+          cd ${{ github.event.repository.name }}
 
           docker build . -t dating-app-${{ github.head_ref }}
-          docker run -d -p 3111:8080 --name dating-app-${{ github.head_ref }} dating-app-${{ github.head_ref }}
+          docker run -d -p 3111:8080 --name ${{ github.event.repository.name }}-${{ github.head_ref }} ${{ github.event.repository.name }}-${{ github.head_ref }}
 
 
   
