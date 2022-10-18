@@ -21,6 +21,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       with:
@@ -29,15 +33,14 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          echo "##[set-output name=branch;]${GITHUB_REF#refs/heads/}"
-          brunch=$(##[set-output name=branch;]${GITHUB_REF#refs/heads/})
+          echo ${{ steps.extract_branch.outputs.branch }}
           echo ${{ github.event.pull_request.title }}
           rm -rf dating-app-backend 
           docker stop dating-app &> /dev/null || true
           docker rm dating-app &> /dev/null || true
           docker image rm dating-app &> /dev/null || true
 
-          git clone https://github.com/Brigade-2/dating-app-backend.git -b brunch
+          git clone https://github.com/Brigade-2/dating-app-backend.git -b ${{ steps.extract_branch.outputs.branch }}
           cd dating-app-backend
 
           docker build . -t dating-app
