@@ -13,7 +13,12 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: whoami
+        script: |
+          git clone https://github.com/Brigade-2/dating-app-backend.git
+          cd dating-app-backend
+          git checkout add_ci
+          docker build . -t dating-app
+          docker run -p 8080:8080 dating-app
 
 
   
