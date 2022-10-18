@@ -29,7 +29,12 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          rm -rf dating-app-backend
+          
+          rm -rf dating-app-backend 
+          docker stop dating-app &> /dev/null || true
+          docker rm dating-app &> /dev/null || true
+          docker image rm dating-app &> /dev/null || true
+
           git clone https://github.com/Brigade-2/dating-app-backend.git
           cd dating-app-backend
           git checkout add_ci
