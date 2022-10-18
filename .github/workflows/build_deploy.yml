@@ -29,8 +29,11 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          echo running on branch ${{ github.head_ref }}
-          echo ${{ github.event.pull_request.title }}
+          echo running on branch: ${{ github.head_ref }}
+          echo name of Pull Request: ${{ github.event.pull_request.title }}
+          
+
+
           rm -rf dating-app-backend 
           docker stop dating-app &> /dev/null || true
           docker rm dating-app &> /dev/null || true
@@ -39,8 +42,8 @@ jobs:
           git clone https://github.com/Brigade-2/dating-app-backend.git -b ${{ github.head_ref }} 
           cd dating-app-backend
 
-          docker build . -t dating-app
-          docker run -d -p 3111:8080 --name dating-app dating-app  
+          docker build . -t dating-app/${{ github.event.pull_request.title }}
+          docker run -d -p 3111:8080 --name dating-app/${{ github.event.pull_request.title }} dating-app/${{ github.event.pull_request.title }}  
 
 
   
