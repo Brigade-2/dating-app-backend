@@ -34,7 +34,7 @@ jobs:
           cd dating-app-backend
           git checkout add_ci
           docker build . -t dating-app
-          docker run -p 8080:8080 dating-app -d 
+          docker run -p 3111:8080 --name dating-app dating-app -d 
 
 
   
