@@ -43,8 +43,8 @@ jobs:
           git clone https://github.com/Brigade-2/dating-app-backend.git -b ${{ github.head_ref }} 
           cd dating-app-backend
 
-          docker build . -t "dating-app-${pr_name}"
-          docker run -d -p 3111:8080 --name "dating-app-${pr_name}" "dating-app-${pr_name}"
+          docker build . -t "dating-app-$pr_name"
+          docker run -d -p 3111:8080 --name "dating-app-$pr_name" "dating-app-$pr_name"
 
 
   
