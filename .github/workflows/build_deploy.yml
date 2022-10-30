@@ -45,7 +45,7 @@ jobs:
           cd ${{ github.event.repository.name }}
 
           docker build . -t ${{ github.event.repository.name }}-${{ github.head_ref }}
-          docker run -d -p ${{env.Host_Port}}:${{env.Service_port}} --name ${{ github.event.repository.name }}-${{ github.head_ref }} ${{ github.event.repository.name }}-${{ github.head_ref }}
+          docker run -d -p ${{ env.Host_Port }}:${{ env.Service_Port }} --name ${{ github.event.repository.name }}-${{ github.head_ref }} ${{ github.event.repository.name }}-${{ github.head_ref }}
 
 
   
