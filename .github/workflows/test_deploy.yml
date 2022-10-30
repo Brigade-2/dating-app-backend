@@ -1,4 +1,4 @@
-name: Build checks
+name: Test deploy
 
 on: [pull_request]
 

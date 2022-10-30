@@ -1,6 +1,10 @@
-name: Build checks
+name: Production deploy
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - master
+ 
 
 jobs:
   build:
@@ -23,6 +27,7 @@ jobs:
     env:
       Host_Port: 3111
       Service_Port: 8080
+      Container_Name: prod
     steps:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
@@ -34,18 +39,15 @@ jobs:
         script: |
           echo running on branch: ${{ github.head_ref }}
           echo name of Pull Request: ${{ github.event.pull_request.title }}
-
+          echo type of deployment: ${{ env.Container_Name }}
 
           rm -rf ${{ github.event.repository.name }}
-          docker stop ${{ github.event.repository.name }}-${{ github.head_ref }} &> /dev/null || true
-          docker rm ${{ github.event.repository.name }}-${{ github.head_ref }} &> /dev/null || true
-          docker image rm ${{ github.event.repository.name }}-${{ github.head_ref }} &> /dev/null || true
+          docker stop ${{ github.event.repository.name }}-${{ env.Container_Name }} &> /dev/null || true
+          docker rm ${{ github.event.repository.name }}-${{ env.Container_Name }} &> /dev/null || true
+          docker image rm ${{ github.event.repository.name }}-${{ env.Container_Name }} &> /dev/null || true
 
           git clone https://github.com/Brigade-2/${{ github.event.repository.name }}.git -b ${{ github.head_ref }} 
           cd ${{ github.event.repository.name }}
 
-          docker build . -t ${{ github.event.repository.name }}-${{ github.head_ref }}
-          docker run -d -p ${{ env.Host_Port }}:${{ env.Service_Port }} --name ${{ github.event.repository.name }}-${{ github.head_ref }} ${{ github.event.repository.name }}-${{ github.head_ref }}
-
-
-  
+          docker build . -t ${{ github.event.repository.name }}-${{ env.Container_Name }}
+          docker run -d -p ${{ env.Host_Port }}:${{ env.Service_Port }} --name ${{ github.event.repository.name }}-${{ env.Container_Name }} ${{ github.event.repository.name }}-${{ env.Container_Name }}
