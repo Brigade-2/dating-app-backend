@@ -37,9 +37,9 @@ jobs:
 
 
           rm -rf ${{ github.event.repository.name }}
-          docker stop ${{ github.event.repository.name }}-${{ github.head_ref }} &> /dev/null || true
-          docker rm ${{ github.event.repository.name }}-${{ github.head_ref }} &> /dev/null || true
-          docker image rm ${{ github.event.repository.name }}-${{ github.head_ref }} &> /dev/null || true
+          docker stop ${{ github.event.repository.name }}-* &> /dev/null || true
+          docker rm ${{ github.event.repository.name }}-* &> /dev/null || true
+          docker image rm ${{ github.event.repository.name }}-* &> /dev/null || true
 
           git clone https://github.com/Brigade-2/${{ github.event.repository.name }}.git -b ${{ github.head_ref }} 
           cd ${{ github.event.repository.name }}
