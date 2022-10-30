@@ -20,8 +20,6 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    env:
-      Host_Port: 3111
     steps:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
@@ -44,7 +42,7 @@ jobs:
           cd ${{ github.event.repository.name }}
 
           docker build . -t ${{ github.event.repository.name }}-${{ github.head_ref }}
-          docker run -d -p $Host_Port:8080 --name ${{ github.event.repository.name }}-${{ github.head_ref }} ${{ github.event.repository.name }}-${{ github.head_ref }}
+          docker run -d -p 3111:8080 --name ${{ github.event.repository.name }}-${{ github.head_ref }} ${{ github.event.repository.name }}-${{ github.head_ref }}
 
 
   
