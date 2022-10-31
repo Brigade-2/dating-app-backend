@@ -1,45 +1,63 @@
 package org.tinder.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-
-import javax.annotation.Generated;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  * Match
  */
 
+@Entity
 public class Match {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
+  private Long id;
 
-  @JsonProperty("messages")
-  @Valid
-  private List<Message> messages = null;
+  @Column(name = "user1_id")
+  private Long user1Id;
 
-  public Match messages(List<Message> messages) {
-    this.messages = messages;
-    return this;
+  @Column(name = "user2_id")
+  private Long user2Id;
+
+  @OneToMany(mappedBy = "match")
+  private List<Message> messages;
+
+  public Long getId() {
+    return id;
   }
 
-  public Match addMessagesItem(Message messagesItem) {
-    if (this.messages == null) {
-      this.messages = new ArrayList<>();
-    }
-    this.messages.add(messagesItem);
-    return this;
+  public void setId(Long id) {
+    this.id = id;
   }
 
-  /**
-   * Get messages
-   * @return messages
-  */
-  @Valid 
+  @Schema(name = "user1_id", required = true)
+  public Long getUser1Id() {
+    return user1Id;
+  }
+
+  public void setUser1Id(Long user1Id) {
+    this.user1Id = user1Id;
+  }
+
+  @Schema(name = "user2_id", required = true)
+  public Long getUser2Id() {
+    return user2Id;
+  }
+
+  public void setUser2Id(Long user2Id) {
+    this.user2Id = user2Id;
+  }
+
   @Schema(name = "messages", required = false)
   public List<Message> getMessages() {
     return messages;
@@ -47,43 +65,6 @@ public class Match {
 
   public void setMessages(List<Message> messages) {
     this.messages = messages;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Match match = (Match) o;
-    return Objects.equals(this.messages, match.messages);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(messages);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class Match {\n");
-    sb.append("    messages: ").append(toIndentedString(messages)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
   }
 }
 
