@@ -160,8 +160,8 @@ public interface TinderApi {
         value = "/user",
         produces = { "application/json" }
     )
-    default ResponseEntity<List<UserEntity>> getAllUsers(
-        @Parameter(name = "gender", description = "Gender to filter by") @Valid @RequestParam(value = "gender", required = false) List<String> gender,
+    default ResponseEntity<Iterable<UserEntity>> getAllUsers(
+        @Parameter(name = "gender", description = "Gender to filter by") @Valid @RequestParam(value = "gender", required = false) String gender,
         @Parameter(name = "age_range_start", description = "") @Valid @RequestParam(value = "age_range_start", required = false) Integer ageRangeStart,
         @Parameter(name = "age_range_end", description = "") @Valid @RequestParam(value = "age_range_end", required = false) Integer ageRangeEnd,
         @Parameter(name = "tags", description = "") @Valid @RequestParam(value = "tags", required = false) List<String> tags

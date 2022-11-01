@@ -1,24 +1,26 @@
 package org.tinder.api;
 
+import org.springframework.web.bind.annotation.RestController;
 import org.tinder.model.Message;
 import org.tinder.model.UserEntity;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.tinder.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 public class TinderApiController implements TinderApi {
-
+    private final UserService userService;
     private final NativeWebRequest request;
 
     @Autowired
-    public TinderApiController(NativeWebRequest request) {
+    public TinderApiController(UserService userService, NativeWebRequest request) {
+        this.userService = userService;
         this.request = request;
     }
 
@@ -29,7 +31,7 @@ public class TinderApiController implements TinderApi {
 
     @Override
     public ResponseEntity<UserEntity> addUser(UserEntity user) {
-        return TinderApi.super.addUser(user);
+        return this.userService.addUser(user);
     }
 
     @Override
@@ -39,12 +41,15 @@ public class TinderApiController implements TinderApi {
 
     @Override
     public ResponseEntity<Void> deleteUser(Long userId) {
-        return TinderApi.super.deleteUser(userId);
+        return this.userService.deleteUser(userId);
     }
 
     @Override
-    public ResponseEntity<List<UserEntity>> getAllUsers(List<String> gender, Integer ageRangeStart, Integer ageRangeEnd, List<String> tags) {
-        return TinderApi.super.getAllUsers(gender, ageRangeStart, ageRangeEnd, tags);
+    public ResponseEntity<Iterable<UserEntity>> getAllUsers(String gender,
+                                                            Integer ageRangeStart,
+                                                            Integer ageRangeEnd,
+                                                            List<String> tags) {
+        return this.userService.getAllUsers(gender, ageRangeStart, ageRangeEnd, tags);
     }
 
     @Override
@@ -59,7 +64,7 @@ public class TinderApiController implements TinderApi {
 
     @Override
     public ResponseEntity<UserEntity> getUser(Long userId) {
-        return TinderApi.super.getUser(userId);
+        return this.userService.getUserById(userId);
     }
 
     @Override
