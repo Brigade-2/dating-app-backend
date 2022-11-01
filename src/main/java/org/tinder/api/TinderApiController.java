@@ -1,7 +1,7 @@
 package org.tinder.api;
 
 import org.tinder.model.Message;
-import org.tinder.model.User;
+import org.tinder.model.UserEntity;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class TinderApiController implements TinderApi {
     }
 
     @Override
-    public ResponseEntity<User> addUser(User user) {
+    public ResponseEntity<UserEntity> addUser(UserEntity user) {
         return TinderApi.super.addUser(user);
     }
 
@@ -43,7 +43,7 @@ public class TinderApiController implements TinderApi {
     }
 
     @Override
-    public ResponseEntity<List<User>> getAllUsers(List<String> gender, Integer ageRangeStart, Integer ageRangeEnd, List<String> tags) {
+    public ResponseEntity<List<UserEntity>> getAllUsers(List<String> gender, Integer ageRangeStart, Integer ageRangeEnd, List<String> tags) {
         return TinderApi.super.getAllUsers(gender, ageRangeStart, ageRangeEnd, tags);
     }
 
@@ -58,7 +58,7 @@ public class TinderApiController implements TinderApi {
     }
 
     @Override
-    public ResponseEntity<User> getUser(Long userId) {
+    public ResponseEntity<UserEntity> getUser(Long userId) {
         return TinderApi.super.getUser(userId);
     }
 
@@ -73,7 +73,7 @@ public class TinderApiController implements TinderApi {
     }
 
     @Override
-    public ResponseEntity<User> postLike(Long userId, Long likedUserId, Boolean likeStatus) {
+    public ResponseEntity<UserEntity> postLike(Long userId, Long likedUserId, Boolean likeStatus) {
         return TinderApi.super.postLike(userId, likedUserId, likeStatus);
     }
 
@@ -88,7 +88,7 @@ public class TinderApiController implements TinderApi {
     }
 
     @Override
-    public ResponseEntity<User> updateUser(Long userId, User user) {
+    public ResponseEntity<UserEntity> updateUser(Long userId, UserEntity user) {
         return TinderApi.super.updateUser(userId, user);
     }
 }
