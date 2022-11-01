@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.Column;
@@ -30,19 +31,24 @@ public class UserEntity {
   @JsonProperty("id")
   private Long id;
 
+  @NotNull
   @JsonProperty("email")
   private String email;
 
+  @NotNull
   @JsonProperty("login")
   private String login;
 
+  @NotNull
   @JsonProperty("password")
   private String password;
 
+  @NotNull
   @Column(name = "first_name")
   @JsonProperty("first_name")
   private String firstName;
 
+  @NotNull
   @Column(name = "second_name")
   @JsonProperty("second_name")
   private String secondName;
@@ -58,7 +64,7 @@ public class UserEntity {
   @Column(name = "preferred_gender")
   @Enumerated(EnumType.STRING)
   @JsonProperty("preferred_gender")
-  private GenderEnum preferredGender;
+  private transient GenderEnum preferredGender;
 
   @Column(name = "preferred_age_start")
   @JsonProperty("preferred_age_start")
@@ -79,9 +85,11 @@ public class UserEntity {
   private Set<Tag> tags;
 
   @OneToMany(mappedBy = "from")
+  @JsonIgnore
   private List<Like> fromLikes;
 
   @OneToMany(mappedBy = "to")
+  @JsonIgnore
   private List<Like> toLikes;
 
   @OneToMany(mappedBy = "userEntity")
@@ -124,7 +132,7 @@ public class UserEntity {
   public void setPassword(String password) {
     this.password = password;
   }
-  
+
   @Schema(name = "preferred_gender", required = false)
   public GenderEnum getPreferredGender() {
     return preferredGender;
@@ -159,5 +167,69 @@ public class UserEntity {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public String getSecondName() {
+    return secondName;
+  }
+
+  public void setSecondName(String secondName) {
+    this.secondName = secondName;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public LocalDate getCreationDate() {
+    return creationDate;
+  }
+
+  public void setCreationDate(LocalDate creationDate) {
+    this.creationDate = creationDate;
+  }
+
+  public Set<Tag> getTags() {
+    return tags;
+  }
+
+  public void setTags(Set<Tag> tags) {
+    this.tags = tags;
+  }
+
+  public List<Like> getFromLikes() {
+    return fromLikes;
+  }
+
+  public void setFromLikes(List<Like> fromLikes) {
+    this.fromLikes = fromLikes;
+  }
+
+  public List<Like> getToLikes() {
+    return toLikes;
+  }
+
+  public void setToLikes(List<Like> toLikes) {
+    this.toLikes = toLikes;
+  }
+
+  public List<Photo> getPhotos() {
+    return photos;
+  }
+
+  public void setPhotos(List<Photo> photos) {
+    this.photos = photos;
   }
 }
