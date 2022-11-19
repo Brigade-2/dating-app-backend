@@ -16,6 +16,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -165,7 +166,7 @@ public interface TinderApi {
         @Parameter(name = "age_range_start", description = "") @Valid @RequestParam(value = "age_range_start", required = false) Integer ageRangeStart,
         @Parameter(name = "age_range_end", description = "") @Valid @RequestParam(value = "age_range_end", required = false) Integer ageRangeEnd,
         @Parameter(name = "tags", description = "") @Valid @RequestParam(value = "tags", required = false) List<String> tags
-    ) {
+    ) throws URISyntaxException {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {

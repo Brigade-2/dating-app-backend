@@ -1,5 +1,6 @@
 package org.tinder.api;
 
+import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.tinder.model.Message;
 import org.tinder.model.UserEntity;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.tinder.service.UserService;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +51,23 @@ public class TinderApiController implements TinderApi {
     public ResponseEntity<Iterable<UserEntity>> getAllUsers(String gender,
                                                             Integer ageRangeStart,
                                                             Integer ageRangeEnd,
-                                                            List<String> tags) {
+                                                            List<String> tags) throws URISyntaxException {
+        System.out.println(request.getParameterMap().toString());
+        URI uri = new URI("http", null, "fedozvpn.duckdns.org", 8090, "/api/collections/users/records", request.getParameterMap().toString() , null);
+//
+//        HttpEntity<String> entity = new HttpEntity<>(req);
+//
+//        try {
+//            ResponseEntity<String> responseEntity =
+//                    restTemplate.exchange(uri, method, entity, String.class);
+//            return responseEntity;
+//        } catch (HttpClientErrorException ex) {
+//            return ResponseEntity
+//                    .status(ex.getStatusCode())
+//                    .headers(ex.getResponseHeaders())
+//                    .body(ex.getResponseBodyAsString());
+//        }
+
         return this.userService.getAllUsers(gender, ageRangeStart, ageRangeEnd, tags);
     }
 
