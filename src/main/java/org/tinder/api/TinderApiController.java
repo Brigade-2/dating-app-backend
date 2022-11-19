@@ -49,6 +49,21 @@ public class TinderApiController implements TinderApi {
                                                             Integer ageRangeStart,
                                                             Integer ageRangeEnd,
                                                             List<String> tags) {
+        System.out.println(request.getParameterMap().toString());
+        URI uri = new URI("http", null, "fedozvpn.duckdns.org", 8090, "/api/collections/users/records", request.getParameterMap().toString() , null);
+//
+//        HttpEntity<String> entity = new HttpEntity<>(req);
+//
+//        try {
+//            ResponseEntity<String> responseEntity =
+//                    restTemplate.exchange(uri, method, entity, String.class);
+//            return responseEntity;
+//        } catch (HttpClientErrorException ex) {
+//            return ResponseEntity
+//                    .status(ex.getStatusCode())
+//                    .headers(ex.getResponseHeaders())
+//                    .body(ex.getResponseBodyAsString());
+//        }
         return this.userService.getAllUsers(gender, ageRangeStart, ageRangeEnd, tags);
     }
 
