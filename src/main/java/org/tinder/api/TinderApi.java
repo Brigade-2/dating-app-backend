@@ -1,7 +1,7 @@
 package org.tinder.api;
 
 import org.tinder.model.Message;
-import org.tinder.model.User;
+import org.tinder.model.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,7 +31,7 @@ public interface TinderApi {
      * POST /user : Add a new user
      * 
      *
-     * @param user User (required)
+     * @param userEntity User (required)
      * @return successful operation (status code 200)
      *         or Invalid input (status code 405)
      */
@@ -42,7 +42,7 @@ public interface TinderApi {
         tags = { "user" },
         responses = {
             @ApiResponse(responseCode = "200", description = "successful operation", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = UserEntity.class))
             }),
             @ApiResponse(responseCode = "405", description = "Invalid input")
         }
@@ -53,8 +53,8 @@ public interface TinderApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<User> addUser(
-        @Parameter(name = "User", description = "User", required = true) @Valid @RequestBody User user
+    default ResponseEntity<UserEntity> addUser(
+        @Parameter(name = "User", description = "User", required = true) @Valid @RequestBody UserEntity userEntity
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
@@ -138,7 +138,6 @@ public interface TinderApi {
 
     /**
      * GET /user : Get all users, also filter
-     * 
      *
      * @param gender Gender to filter by (optional)
      * @param ageRangeStart  (optional)
@@ -152,7 +151,7 @@ public interface TinderApi {
         tags = { "user" },
         responses = {
             @ApiResponse(responseCode = "200", description = "successful operation", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = UserEntity.class))
             })
         }
     )
@@ -161,8 +160,8 @@ public interface TinderApi {
         value = "/user",
         produces = { "application/json" }
     )
-    default ResponseEntity<List<User>> getAllUsers(
-        @Parameter(name = "gender", description = "Gender to filter by") @Valid @RequestParam(value = "gender", required = false) List<String> gender,
+    default ResponseEntity<Iterable<UserEntity>> getAllUsers(
+        @Parameter(name = "gender", description = "Gender to filter by") @Valid @RequestParam(value = "gender", required = false) String gender,
         @Parameter(name = "age_range_start", description = "") @Valid @RequestParam(value = "age_range_start", required = false) Integer ageRangeStart,
         @Parameter(name = "age_range_end", description = "") @Valid @RequestParam(value = "age_range_end", required = false) Integer ageRangeEnd,
         @Parameter(name = "tags", description = "") @Valid @RequestParam(value = "tags", required = false) List<String> tags
@@ -267,7 +266,7 @@ public interface TinderApi {
         tags = { "user" },
         responses = {
             @ApiResponse(responseCode = "200", description = "successful operation", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = UserEntity.class))
             }),
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "403", description = "Not authorized")
@@ -278,7 +277,7 @@ public interface TinderApi {
         value = "/user/{userId}",
         produces = { "application/json" }
     )
-    default ResponseEntity<User> getUser(
+    default ResponseEntity<UserEntity> getUser(
         @Parameter(name = "userId", description = "ID of user to get", required = true) @PathVariable("userId") Long userId
     ) {
         getRequest().ifPresent(request -> {
@@ -372,7 +371,7 @@ public interface TinderApi {
         tags = { "user" },
         responses = {
             @ApiResponse(responseCode = "200", description = "successful operation", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = UserEntity.class))
             }),
             @ApiResponse(responseCode = "400", description = "Invalid ID supplied"),
             @ApiResponse(responseCode = "404", description = "User not found"),
@@ -384,7 +383,7 @@ public interface TinderApi {
         value = "/user/{userId}/like",
         produces = { "application/json" }
     )
-    default ResponseEntity<User> postLike(
+    default ResponseEntity<UserEntity> postLike(
         @Parameter(name = "userId", description = "ID of user to update", required = true) @PathVariable("userId") Long userId,
         @NotNull @Parameter(name = "liked_user_id", description = "ID of user to like", required = true) @Valid @RequestParam(value = "liked_user_id", required = true) Long likedUserId,
         @NotNull @Parameter(name = "like_status", description = "Status of like or dislike of user to like", required = true) @Valid @RequestParam(value = "like_status", required = true) Boolean likeStatus
@@ -472,7 +471,7 @@ public interface TinderApi {
      * 
      *
      * @param userId ID of user to update (required)
-     * @param user User (required)
+     * @param userEntity User (required)
      * @return successful operation (status code 200)
      *         or Invalid ID supplied (status code 400)
      *         or User not found (status code 404)
@@ -484,7 +483,7 @@ public interface TinderApi {
         tags = { "user" },
         responses = {
             @ApiResponse(responseCode = "200", description = "successful operation", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = UserEntity.class))
             }),
             @ApiResponse(responseCode = "400", description = "Invalid ID supplied"),
             @ApiResponse(responseCode = "404", description = "User not found"),
@@ -497,9 +496,9 @@ public interface TinderApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<User> updateUser(
+    default ResponseEntity<UserEntity> updateUser(
         @Parameter(name = "userId", description = "ID of user to update", required = true) @PathVariable("userId") Long userId,
-        @Parameter(name = "User", description = "User", required = true) @Valid @RequestBody User user
+        @Parameter(name = "User", description = "User", required = true) @Valid @RequestBody UserEntity userEntity
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
