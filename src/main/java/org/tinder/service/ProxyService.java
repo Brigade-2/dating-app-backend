@@ -114,4 +114,91 @@ public class ProxyService {
                     .body(e.getResponseBodyAsString());
         }
     }
+    public ResponseEntity<String> processProxyAuthWithPassword(String body, HttpMethod method, HttpServletRequest request, HttpServletResponse response)
+            throws URISyntaxException {
+        String requestUrl = request.getRequestURI();
+        System.out.println(request.getQueryString());
+
+        URI uri = new URI("http", null, "fedozvpn.duckdns.org", 8090, "/api/collections/users/auth-with-password", null, null);
+        uri = UriComponentsBuilder.fromUri(uri)
+                .query(request.getQueryString())
+                .build(true).toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            headers.set(headerName, request.getHeader(headerName));
+        }
+
+        System.out.println(uri.toString());
+        HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            return restTemplate.exchange(uri, method, httpEntity, String.class);
+        } catch (HttpStatusCodeException e) {
+            return ResponseEntity.status(e.getRawStatusCode())
+                    .headers(e.getResponseHeaders())
+                    .body(e.getResponseBodyAsString());
+        }
+    }
+    public ResponseEntity<String> processProxyUpdateUser(String userId, String user, HttpMethod method, HttpServletRequest request,
+                                                         HttpServletResponse response) throws URISyntaxException {
+        String requestUrl = request.getRequestURI();
+        System.out.println(request.getQueryString());
+
+        URI uri = new URI("http", null, "fedozvpn.duckdns.org", 8090, "/api/collections/users/records", null, null);
+        uri = UriComponentsBuilder.fromUri(uri)
+                .path("/" + userId)
+                .query(request.getQueryString())
+                .build(true).toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            headers.set(headerName, request.getHeader(headerName));
+        }
+        headers.set("X-HTTP-Method-Override", "PATCH");
+
+        System.out.println(uri.toString());
+        HttpEntity<String> httpEntity = new HttpEntity<>(user.toString(), headers);
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            return restTemplate.exchange(uri, method, httpEntity, String.class);
+        } catch (HttpStatusCodeException e) {
+            return ResponseEntity.status(e.getRawStatusCode())
+                    .headers(e.getResponseHeaders())
+                    .body(e.getResponseBodyAsString());
+        }
+    }
+
+    public ResponseEntity<String> processProxyCreateUser(String user, HttpMethod method, HttpServletRequest request,
+                           HttpServletResponse response) throws URISyntaxException {
+        String requestUrl = request.getRequestURI();
+        System.out.println(request.getQueryString());
+
+        URI uri = new URI("http", null, "fedozvpn.duckdns.org", 8090, "/api/collections/users/records", null, null);
+        uri = UriComponentsBuilder.fromUri(uri)
+                .query(request.getQueryString())
+                .build(true).toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            headers.set(headerName, request.getHeader(headerName));
+        }
+
+        System.out.println(uri.toString());
+        HttpEntity<String> httpEntity = new HttpEntity<>(user.toString(), headers);
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            return restTemplate.exchange(uri, method, httpEntity, String.class);
+        } catch (HttpStatusCodeException e) {
+            return ResponseEntity.status(e.getRawStatusCode())
+                    .headers(e.getResponseHeaders())
+                    .body(e.getResponseBodyAsString());
+        }
+    }
 }
