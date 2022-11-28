@@ -1,6 +1,10 @@
 package org.tinder.api;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.tinder.model.Message;
 import org.tinder.model.UserEntity;
@@ -9,8 +13,11 @@ import org.tinder.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.tinder.service.ProxyService;
 import org.tinder.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -20,6 +27,9 @@ import java.util.Optional;
 public class TinderApiController implements TinderApi {
     private final UserService userService;
     private final NativeWebRequest request;
+
+    @Autowired
+    ProxyService service;
 
     @Autowired
     public TinderApiController(UserService userService, NativeWebRequest request) {
@@ -43,32 +53,15 @@ public class TinderApiController implements TinderApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteUser(Long userId) {
-        return this.userService.deleteUser(userId);
+    public ResponseEntity<Void> deleteUser(@Parameter(name = "userId", description = "ID of user", required = true) @PathVariable("userId") String userId, HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+
+        return this.service.processProxyRequestDelete(method,request,response, userId);
     }
 
     @Override
-    public ResponseEntity<Iterable<UserEntity>> getAllUsers(String gender,
-                                                            Integer ageRangeStart,
-                                                            Integer ageRangeEnd,
-                                                            List<String> tags) throws URISyntaxException {
-        System.out.println(request.getParameterMap().toString());
-        URI uri = new URI("http", null, "fedozvpn.duckdns.org", 8090, "/api/collections/users/records", request.getParameterMap().toString() , null);
-//
-//        HttpEntity<String> entity = new HttpEntity<>(req);
-//
-//        try {
-//            ResponseEntity<String> responseEntity =
-//                    restTemplate.exchange(uri, method, entity, String.class);
-//            return responseEntity;
-//        } catch (HttpClientErrorException ex) {
-//            return ResponseEntity
-//                    .status(ex.getStatusCode())
-//                    .headers(ex.getResponseHeaders())
-//                    .body(ex.getResponseBodyAsString());
-//        }
-
-        return this.userService.getAllUsers(gender, ageRangeStart, ageRangeEnd, tags);
+    public ResponseEntity<String> getAllUsers(
+                                       HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        return this.service.processProxyRequest(method,request,response);
     }
 
     @Override
@@ -82,8 +75,8 @@ public class TinderApiController implements TinderApi {
     }
 
     @Override
-    public ResponseEntity<UserEntity> getUser(Long userId) {
-        return this.userService.getUserById(userId);
+    public ResponseEntity<String> getUser(String userId, HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        return this.service.processProxyRequestGet(method,request,response,userId);
     }
 
     @Override

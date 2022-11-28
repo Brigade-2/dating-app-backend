@@ -1,5 +1,6 @@
 package org.tinder.api;
 
+import org.springframework.http.HttpMethod;
 import org.tinder.model.Message;
 import org.tinder.model.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.net.URISyntaxException;
@@ -130,8 +133,7 @@ public interface TinderApi {
         value = "/user/{userId}"
     )
     default ResponseEntity<Void> deleteUser(
-        @Parameter(name = "userId", description = "ID of user to delete", required = true) @PathVariable("userId") Long userId
-    ) {
+            @Parameter(name = "userId", description = "ID of user", required = true) @PathVariable("userId") String userId, HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -161,24 +163,12 @@ public interface TinderApi {
         value = "/user",
         produces = { "application/json" }
     )
-    default ResponseEntity<Iterable<UserEntity>> getAllUsers(
-        @Parameter(name = "gender", description = "Gender to filter by") @Valid @RequestParam(value = "gender", required = false) String gender,
-        @Parameter(name = "age_range_start", description = "") @Valid @RequestParam(value = "age_range_start", required = false) Integer ageRangeStart,
-        @Parameter(name = "age_range_end", description = "") @Valid @RequestParam(value = "age_range_end", required = false) Integer ageRangeEnd,
-        @Parameter(name = "tags", description = "") @Valid @RequestParam(value = "tags", required = false) List<String> tags
-    ) throws URISyntaxException {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"password\" : \"password\", \"preffered_age_start\" : 6, \"photo\" : [ \"photo\", \"photo\" ], \"location\" : \"location\", \"id\" : 0, \"login\" : \"fedos3d\", \"preffered_gender\" : \"male\", \"preffered_age_end\" : 1, \"email\" : \"memokek@kek.ru\", \"tags\" : [ \"tags\", \"tags\" ] }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
+    default ResponseEntity<String> getAllUsers(
+                                              HttpMethod method, HttpServletRequest request, HttpServletResponse response)
+            throws URISyntaxException {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
     }
+
 
 
     /**
@@ -278,18 +268,9 @@ public interface TinderApi {
         value = "/user/{userId}",
         produces = { "application/json" }
     )
-    default ResponseEntity<UserEntity> getUser(
-        @Parameter(name = "userId", description = "ID of user to get", required = true) @PathVariable("userId") Long userId
-    ) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"password\" : \"password\", \"preffered_age_start\" : 6, \"photo\" : [ \"photo\", \"photo\" ], \"location\" : \"location\", \"id\" : 0, \"login\" : \"fedos3d\", \"preffered_gender\" : \"male\", \"preffered_age_end\" : 1, \"email\" : \"memokek@kek.ru\", \"tags\" : [ \"tags\", \"tags\" ] }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
+    default ResponseEntity<String> getUser(
+        @Parameter(name = "userId", description = "ID of user to get", required = true) @PathVariable("userId") String userId, HttpMethod method, HttpServletRequest request, HttpServletResponse response
+    ) throws URISyntaxException {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
