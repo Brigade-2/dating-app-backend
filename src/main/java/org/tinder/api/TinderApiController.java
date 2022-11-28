@@ -43,7 +43,7 @@ public class TinderApiController implements TinderApi {
 
     @Override
     public ResponseEntity<String> addUser(String user,
-                                              HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+                                          HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
         return this.proxyService.processProxyCreateUser(user, method, request, response);
     }
 
@@ -69,13 +69,14 @@ public class TinderApiController implements TinderApi {
     }
 
     @Override
-    public ResponseEntity<Object> getMatchForUser(Long userId, Long matchId) {
-        return TinderApi.super.getMatchForUser(userId, matchId);
+    public ResponseEntity<String> getMatchForUser(String userId, String matchId, HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        return this.proxyService.processProxyGetMatchForUser(matchId, method, request, response);
     }
 
+    // Не работает пока что
     @Override
-    public ResponseEntity<List<Object>> getMatchesForUser(Long userId) {
-        return TinderApi.super.getMatchesForUser(userId);
+    public ResponseEntity<String> getMatchesForUser(String userId, HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        return this.proxyService.processProxyGetMatchesForUser(userId, method, request, response);
     }
 
     @Override
@@ -98,8 +99,8 @@ public class TinderApiController implements TinderApi {
     }
 
     @Override
-    public ResponseEntity<UserEntity> postLike(Long userId, Long likedUserId, Boolean likeStatus) {
-        return TinderApi.super.postLike(userId, likedUserId, likeStatus);
+    public ResponseEntity<String> postLike(String body, HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        return this.proxyService.processProxyPostLike(body, method, request, response);
     }
 
     @Override

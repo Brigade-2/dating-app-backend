@@ -205,13 +205,14 @@ public interface TinderApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/user/{userId}/match/matchId",
+        value = "/user/{userId}/match/{matchId}",
         produces = { "application/json" }
     )
-    default ResponseEntity<Object> getMatchForUser(
-        @Parameter(name = "userId", description = "ID of user", required = true) @PathVariable("userId") Long userId,
-        @Parameter(name = "matchId", description = "ID of match", required = true) @PathVariable("matchId") Long matchId
-    ) {
+    default ResponseEntity<String> getMatchForUser(
+        @Parameter(name = "userId", description = "ID of user", required = true) @PathVariable("userId") String userId,
+        @Parameter(name = "matchId", description = "ID of match", required = true) @PathVariable("matchId") String matchId,
+        HttpMethod method, HttpServletRequest request, HttpServletResponse response
+    ) throws URISyntaxException {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -239,14 +240,15 @@ public interface TinderApi {
         value = "/user/{userId}/match",
         produces = { "application/json" }
     )
-    default ResponseEntity<List<Object>> getMatchesForUser(
-        @Parameter(name = "userId", description = "ID of user", required = true) @PathVariable("userId") Long userId
-    ) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+    default ResponseEntity<String> getMatchesForUser(
+            @Parameter(name = "userId", description = "ID of user", required = true) @PathVariable("userId") String userId,
+            HttpMethod method, HttpServletRequest request, HttpServletResponse response
+    ) throws URISyntaxException {
+        getRequest().ifPresent(request_ -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request_.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "null";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    ApiUtil.setExampleResponse(request_, "application/json", exampleString);
                     break;
                 }
             }
@@ -384,19 +386,16 @@ public interface TinderApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/user/{userId}/like",
+        value = "/user/like",
         produces = { "application/json" }
     )
-    default ResponseEntity<UserEntity> postLike(
-        @Parameter(name = "userId", description = "ID of user to update", required = true) @PathVariable("userId") Long userId,
-        @NotNull @Parameter(name = "liked_user_id", description = "ID of user to like", required = true) @Valid @RequestParam(value = "liked_user_id", required = true) Long likedUserId,
-        @NotNull @Parameter(name = "like_status", description = "Status of like or dislike of user to like", required = true) @Valid @RequestParam(value = "like_status", required = true) Boolean likeStatus
-    ) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+    default ResponseEntity<String> postLike(
+           @RequestBody String body, HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        getRequest().ifPresent(request_ -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request_.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "{ \"password\" : \"password\", \"preffered_age_start\" : 6, \"photo\" : [ \"photo\", \"photo\" ], \"location\" : \"location\", \"id\" : 0, \"login\" : \"fedos3d\", \"preffered_gender\" : \"male\", \"preffered_age_end\" : 1, \"email\" : \"memokek@kek.ru\", \"tags\" : [ \"tags\", \"tags\" ] }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    ApiUtil.setExampleResponse(request_, "application/json", exampleString);
                     break;
                 }
             }
@@ -438,6 +437,7 @@ public interface TinderApi {
     }
 
 
+    //TODO: unmatch
     /**
      * DELETE /user/userId/match/matchId : unmatch user
      * 

@@ -201,4 +201,105 @@ public class ProxyService {
                     .body(e.getResponseBodyAsString());
         }
     }
+
+    public ResponseEntity<String> processProxyPostLike(String body, HttpMethod method, HttpServletRequest request,
+    HttpServletResponse response) throws URISyntaxException {
+
+        //TODO: Add check if other user also posted like on you and if so create match record:
+
+
+
+        String requestUrl = request.getRequestURI();
+        System.out.println(request.getQueryString());
+
+        URI uri = new URI("http", null, "fedozvpn.duckdns.org", 8090, "/api/collections/likes/records", null, null);
+        uri = UriComponentsBuilder.fromUri(uri)
+                .query(request.getQueryString())
+                .build(true).toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            headers.set(headerName, request.getHeader(headerName));
+        }
+
+        System.out.println(uri.toString());
+        HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            return restTemplate.exchange(uri, method, httpEntity, String.class);
+        } catch (HttpStatusCodeException e) {
+            return ResponseEntity.status(e.getRawStatusCode())
+                    .headers(e.getResponseHeaders())
+                    .body(e.getResponseBodyAsString());
+        }
+    }
+
+    public ResponseEntity<String> processProxyGetMatchForUser(String matchId, HttpMethod method, HttpServletRequest request,
+                                                              HttpServletResponse response) throws URISyntaxException {
+
+        //TODO: Add check if other user also posted like on you and if so create match record:
+
+
+
+        String requestUrl = request.getRequestURI();
+        System.out.println(request.getQueryString());
+
+        URI uri = new URI("http", null, "fedozvpn.duckdns.org", 8090, "/api/collections/mathces/records", null, null);
+        uri = UriComponentsBuilder.fromUri(uri)
+                .path("/" + matchId)
+                .query(request.getQueryString())
+                .build(true).toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            headers.set(headerName, request.getHeader(headerName));
+        }
+
+        System.out.println(uri.toString());
+        HttpEntity<String> httpEntity = new HttpEntity<>(headers);
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            return restTemplate.exchange(uri, method, httpEntity, String.class);
+        } catch (HttpStatusCodeException e) {
+            return ResponseEntity.status(e.getRawStatusCode())
+                    .headers(e.getResponseHeaders())
+                    .body(e.getResponseBodyAsString());
+        }
+    }
+    public ResponseEntity<String> processProxyGetMatchesForUser(String userId, HttpMethod method, HttpServletRequest request,
+                                                              HttpServletResponse response) throws URISyntaxException {
+
+
+        String requestUrl = request.getRequestURI();
+        System.out.println(request.getQueryString());
+
+        URI uri = new URI("http", null, "fedozvpn.duckdns.org", 8090,
+                "/api/collections/mathces/records",
+                "?filter=(user1_id=\\'" + userId + "\\' || " + "user2_id=\\'" + userId + "\\')", null);
+        uri = UriComponentsBuilder.fromUri(uri)
+                .query(request.getQueryString())
+                .build(true).toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            headers.set(headerName, request.getHeader(headerName));
+        }
+
+        System.out.println(uri.toString());
+        HttpEntity<String> httpEntity = new HttpEntity<>(headers);
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            return restTemplate.exchange(uri, method, httpEntity, String.class);
+        } catch (HttpStatusCodeException e) {
+            return ResponseEntity.status(e.getRawStatusCode())
+                    .headers(e.getResponseHeaders())
+                    .body(e.getResponseBodyAsString());
+        }
+    }
 }
