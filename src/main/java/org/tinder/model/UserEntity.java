@@ -29,29 +29,41 @@ public class UserEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  private Long id;
+  private String id;
+
+  @NotNull
+  @JsonProperty("age")
+  private Integer age;
+
+  @NotNull
+  @JsonProperty("gender")
+  private String gender;
 
   @NotNull
   @JsonProperty("email")
   private String email;
 
   @NotNull
-  @JsonProperty("login")
-  private String login;
+  @JsonProperty("username")
+  private String username;
 
   @NotNull
   @JsonProperty("password")
   private String password;
 
   @NotNull
+  @JsonProperty("passwordConfirm")
+  private String passwordConfirm;
+
+  @NotNull
   @Column(name = "first_name")
   @JsonProperty("first_name")
-  private String firstName;
+  private String first_name;
 
   @NotNull
   @Column(name = "second_name")
   @JsonProperty("second_name")
-  private String secondName;
+  private String second_name;
 
   @Column(name = "description")
   @JsonProperty("description")
@@ -96,11 +108,11 @@ public class UserEntity {
   private List<Photo> photos;
 
   @Schema(name = "id", required = false)
-  public Long getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
   
@@ -114,13 +126,13 @@ public class UserEntity {
   }
 
   @NotNull
-  @Schema(name = "login", example = "fedos3d", required = true)
+  @Schema(name = "username", example = "fedos3d", required = true)
   public String getLogin() {
-    return login;
+    return username;
   }
 
   public void setLogin(String login) {
-    this.login = login;
+    this.username = login;
   }
 
   @NotNull 
@@ -170,19 +182,19 @@ public class UserEntity {
   }
 
   public String getFirstName() {
-    return firstName;
+    return first_name;
   }
 
   public void setFirstName(String firstName) {
-    this.firstName = firstName;
+    this.first_name = firstName;
   }
 
   public String getSecondName() {
-    return secondName;
+    return second_name;
   }
 
   public void setSecondName(String secondName) {
-    this.secondName = secondName;
+    this.second_name = secondName;
   }
 
   public String getDescription() {

@@ -1,5 +1,9 @@
 package org.tinder.api;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.tinder.model.Message;
 import org.tinder.model.UserEntity;
@@ -8,8 +12,13 @@ import org.tinder.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.tinder.service.ProxyService;
 import org.tinder.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +26,9 @@ import java.util.Optional;
 public class TinderApiController implements TinderApi {
     private final UserService userService;
     private final NativeWebRequest request;
+
+    @Autowired
+    ProxyService proxyService;
 
     @Autowired
     public TinderApiController(UserService userService, NativeWebRequest request) {
@@ -30,8 +42,9 @@ public class TinderApiController implements TinderApi {
     }
 
     @Override
-    public ResponseEntity<UserEntity> addUser(UserEntity user) {
-        return this.userService.addUser(user);
+    public ResponseEntity<String> addUser(String user,
+                                          HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        return this.proxyService.processProxyCreateUser(user, method, request, response);
     }
 
     @Override
@@ -40,46 +53,54 @@ public class TinderApiController implements TinderApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteUser(Long userId) {
-        return this.userService.deleteUser(userId);
+    public ResponseEntity<Void> deleteUser(@Parameter(name = "userId", description = "ID of user", required = true) @PathVariable("userId") String userId, HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+
+        return this.proxyService.processProxyRequestDelete(method,request,response, userId);
     }
 
     @Override
-    public ResponseEntity<Iterable<UserEntity>> getAllUsers(String gender,
-                                                            Integer ageRangeStart,
-                                                            Integer ageRangeEnd,
-                                                            List<String> tags) {
-        return this.userService.getAllUsers(gender, ageRangeStart, ageRangeEnd, tags);
+    public ResponseEntity<String> getAllUsers(
+            @Parameter(name = "preffered_gender", description = "Gender to filter by") @Valid @RequestParam(value = "gender", required = false) String gender,
+            @Parameter(name = "preferred_age_start", description = "") @Valid @RequestParam(value = "age_range_start", required = false) Integer ageRangeStart,
+            @Parameter(name = "preferred_age_end", description = "") @Valid @RequestParam(value = "age_range_end", required = false) Integer ageRangeEnd,
+            @Parameter(name = "tags", description = "") @Valid @RequestParam(value = "tags", required = false) List<String> tags,
+            HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        return this.proxyService.processProxyRequest(method,request,response);
     }
 
     @Override
-    public ResponseEntity<Object> getMatchForUser(Long userId, Long matchId) {
-        return TinderApi.super.getMatchForUser(userId, matchId);
+    public ResponseEntity<String> getMatchForUser(String userId, String matchId, HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        return this.proxyService.processProxyGetMatchForUser(matchId, method, request, response);
+    }
+
+    // Не работает пока что
+    @Override
+    public ResponseEntity<String> getMatchesForUser(String userId, HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        return this.proxyService.processProxyGetMatchesForUser(userId, method, request, response);
     }
 
     @Override
-    public ResponseEntity<List<Object>> getMatchesForUser(Long userId) {
-        return TinderApi.super.getMatchesForUser(userId);
+    public ResponseEntity<String> getUser(String userId, HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        return this.proxyService.processProxyRequestGet(method,request,response,userId);
     }
 
     @Override
-    public ResponseEntity<UserEntity> getUser(Long userId) {
-        return this.userService.getUserById(userId);
+    public ResponseEntity<String> loginUser(String body, HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        // here is auth with password
+        return this.proxyService.processProxyAuthWithPassword(body, method, request, response);
+//        return TinderApi.super.loginUser(login, password);
     }
 
-    @Override
-    public ResponseEntity<Void> loginUser(String login, String password) {
-        return TinderApi.super.loginUser(login, password);
-    }
 
+    //TODO: Logout
     @Override
     public ResponseEntity<Void> logoutUser() {
         return TinderApi.super.logoutUser();
     }
 
     @Override
-    public ResponseEntity<UserEntity> postLike(Long userId, Long likedUserId, Boolean likeStatus) {
-        return TinderApi.super.postLike(userId, likedUserId, likeStatus);
+    public ResponseEntity<String> postLike(String body, HttpMethod method, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        return this.proxyService.processProxyPostLike(body, method, request, response);
     }
 
     @Override
@@ -92,8 +113,12 @@ public class TinderApiController implements TinderApi {
         return TinderApi.super.unmatchUser(userId, matchId);
     }
 
+
+    //TODO: Fix update
     @Override
-    public ResponseEntity<UserEntity> updateUser(Long userId, UserEntity user) {
-        return TinderApi.super.updateUser(userId, user);
+    public ResponseEntity<String> updateUser(String userId, String user, HttpMethod method, HttpServletRequest request, HttpServletResponse response)
+            throws URISyntaxException {
+
+        return this.proxyService.processProxyUpdateUser(userId, user, method, request, response);
     }
 }
